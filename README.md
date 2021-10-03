@@ -1,31 +1,25 @@
-# Developing a Single Page App with FastAPI and React
+# **WIP** A Dashbord for Active learning 
 
-### Want to learn how to build this?
+This project aims at creating an interactive dashboard for [BaaL](https://github.com/ElementAI/baal), an active learning library. 
 
-Check out the [post](https://testdriven.io/blog/fastapi-react/).
+**WARNING** I have little knowledge in React/Frontend development.
 
-## Want to use this project?
+### How to run
 
-1. Fork/Clone
+1. `docker-compose up --build`
+2. Go to `localhost:3000`
 
-1. Run the server-side FastAPI app in one terminal window:
 
-    ```sh
-    $ cd backend
-    $ python3.9 -m venv env
-    $ source env/bin/activate
-    (env)$ pip install -r requirements.txt
-    (env)$ python main.py
-    ```
+## TODO (Contributions welcomed)
 
-    Navigate to [http://localhost:8000](http://localhost:8000)
+1. Complete active learning loop
+2. Add types to FastAPI
+3. Improve app styling
+4. Add unit tests
+5. End to end example for CV.
+6. End to end example for NLP.
 
-1. Run the client-side React app in a different terminal window:
+# Resources
 
-    ```sh
-    $ cd frontend
-    $ npm install
-    $ npm run start
-    ```
-
-    Navigate to [http://localhost:3000](http://localhost:3000)
+* Check out the [post](https://testdriven.io/blog/fastapi-react/).
+* Check out the [theme](https://demos.creative-tim.com/docs-purity-ui-dashboard)
