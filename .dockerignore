@@ -7,4 +7,3 @@ __pycache__
 *.pth
 *.gz
 /backend/scripts/cifar-10-batches-py/
-.vscode/

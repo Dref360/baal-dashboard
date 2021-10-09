@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import Card from "components/Card/Card";
-import Chart from "react-apexcharts";
-import { barChartData, barChartOptions } from "variables/charts";
+import Card from "../Card/Card";
+import ReactApexChart from "react-apexcharts";
 
 class BarChart extends Component {
   constructor(props) {
@@ -14,28 +13,43 @@ class BarChart extends Component {
 
   componentDidMount() {
     this.setState({
-      chartData: barChartData,
-      chartOptions: barChartOptions,
+      chartData: [
+        {
+          name: this.props.name,
+          data: this.props.y
+        }
+      ],
+      chartOptions: {
+        chart: {
+          id: "basic-bbarar"
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        dataLabels: {
+          enabled: false,
+        }
+      },
     });
   }
 
   render() {
     return (
-      <Card
+      <div
         py="1rem"
-        height={{ sm: "200px" }}
+        height={{ sm: "500px" }}
         width="100%"
         bg="linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)"
         position="relative"
       >
-        <Chart
+        <ReactApexChart
           options={this.state.chartOptions}
           series={this.state.chartData}
-          type="bar"
+          type="area"
           width="100%"
           height="100%"
         />
-      </Card>
+      </div>
     );
   }
 }

@@ -20,7 +20,7 @@ function MetricHelper({name, values}) {
       <Text>
         {capitalize(name)}
       </Text>
-      <LineChart x={values.x} y={values.y} name={name} />
+      <LineChart x={values.x} y={values.y.map(yi => yi.toFixed(2))} name={name} />
     </Box>
   
   )}
