@@ -1,13 +1,20 @@
 import argparse
+from typing import Optional
 
 import torch
 from baal.active import ActiveLearningDataset
-from app.utils import make_fake_data
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from torchvision.transforms import ToTensor
 
 from app.active_learning import ActiveLearningManager
+from app.utils import make_fake_data
+
+_al_manager: Optional[ActiveLearningManager] = None
+
+
+def get_al_manager() -> Optional[ActiveLearningManager]:
+    return _al_manager
 
 
 def load_dataset():
@@ -24,52 +31,48 @@ def parse_args():
     return parser.parse_args()
 
 
-args = parse_args()
-dataset = load_dataset()
+def create_app():
+    global _al_manager
+    args = parse_args()
+    dataset = load_dataset()
 
+    if args.checkpoint is not None:
+        print("Loading", args.checkpoint)
+        _al_manager = ActiveLearningManager(dataset)
+        _al_manager.load_state_dict(torch.load(args.checkpoint))
+    else:
+        print("Making fake checkpoint!")
+        _al_manager = make_fake_data(dataset, num_labelled=1826, num_step=20)
 
-if args.checkpoint is not None:
-    print("Loading", args.checkpoint)
-    al_manager = ActiveLearningManager(dataset)
-    al_manager.load_state_dict(torch.load(args.checkpoint))
-else:
-    print("Making fake checkpoint!")
-    al_manager = make_fake_data(dataset, num_labelled=1826, num_step=20)
+    app = FastAPI()
 
-app = FastAPI()
+    # Import routers
+    from app.routers.active_learning import router as active_router
 
+    # Include routers
+    app.include_router(active_router)
 
-origins = ["*"]
+    origins = ["*"]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
+    @app.get("/")
+    async def read_root() -> dict:
+        return {"message": "Welcome to BaaL API."}
 
-@app.get("/", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Welcome to your todo list."}
+    origins = ["*"]
 
-
-@app.get("/metrics", tags=["metrics"])
-async def get_metrics() -> dict:
-    return {"data": al_manager.get_metrics()}
-
-
-@app.get("/stats", tags=["stats"])
-async def get_stats() -> dict:
-    return {"data": al_manager.get_labelling_stats()}
-
-
-@app.get("/most_uncertains", tags=["most_uncertains"])
-async def get_most_uncertains() -> dict:
-    return {"data": al_manager.get_most_uncertains()}
-
-
-@app.post("/train", tags=["train"])
-async def start_train() -> dict:
-    return {"training": True}
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    return app

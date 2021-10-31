@@ -23,7 +23,14 @@ class LineChart extends React.Component {
           id: "basic-bar"
         },
         xaxis: {
-          categories: this.props.x
+          categories: this.props.x,
+          title: {text: this.props.xlabel}
+        },
+        grid: {
+          padding: {
+           left: 0,
+           right: 0
+          }
         }
       },
     });
@@ -37,8 +44,6 @@ class LineChart extends React.Component {
           options={this.state.chartOptions}
           series={this.state.chartData}
           type="area"
-          width="100%"
-          height="100%"
         />
       );
     }

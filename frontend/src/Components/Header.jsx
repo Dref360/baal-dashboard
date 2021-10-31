@@ -33,7 +33,7 @@ const Header = () => {
       </Link>
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <Link href="https://github.com/Dref360/baal-dashboard" isExternal>
-          <StarIcon w={6} h={6}/>
+          <Image src='/GitHub-Mark/PNG/GitHub-Mark-32px.png' w={6} h={6}/>
         </Link>
         <Link href="https://baal.readthedocs.io" isExternal>
           <ExternalLinkIcon w={6} h={6} />

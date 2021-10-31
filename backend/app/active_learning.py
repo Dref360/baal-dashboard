@@ -1,8 +1,12 @@
 from typing import Tuple, List, Dict
 
 import numpy as np
+from PIL import Image
 from baal.active import ActiveLearningDataset
 from pydantic import BaseModel
+from torchvision.transforms.functional import to_pil_image
+
+from app.types.active_learning import DatasetSplit
 
 Uncertainty = np.ndarray
 Indices = List[int]
@@ -43,10 +47,10 @@ class ActiveLearningManager:
             [y for _, y in self.dataset], return_counts=True
         )[1].tolist()
 
-    def get_metrics(self):
+    def get_metrics(self) -> Dict[str, Metric]:
         return self.metrics
 
-    def get_most_uncertains(self, top=5):
+    def get_most_uncertains(self, top=5) -> List[int]:
         if self.uncertainty_progress:
             return np.argsort(self.uncertainty_progress[-1][0])[-top:].tolist()
         return []
@@ -67,5 +71,19 @@ class ActiveLearningManager:
             "total": len(self.dataset._dataset),
             "uncertainty_stats": up,
             "uncertainty": uncertainty,
-            "class_distribution": self.class_distribution,
         }
+
+    def get_dataset_info(self) -> List[Tuple[str, int]]:
+        return list(
+            zip(
+                [f"Class {idx}" for idx in range(len(self.class_distribution))],
+                self.class_distribution,
+            )
+        )
+
+    def get_input_image(self, index: int, dataset: DatasetSplit) -> Image:
+        if dataset == DatasetSplit.labelled:
+            img = self.dataset[index][0]
+        else:
+            img = self.dataset.pool[index][0]
+        return to_pil_image(img)

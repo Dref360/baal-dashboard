@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from "react";
-import LineChart from "./Charts/LineChart"
+import React, { useEffect, useState } from "react";
+import LineChart from "./Charts/LineChart";
 import {
   Box,
+  Divider,
+  Flex,
+  Grid,
+  SimpleGrid,
   Stack,
-  Text
+  Text,
 } from "@chakra-ui/react";
 
 function capitalize(string) {
@@ -11,41 +15,61 @@ function capitalize(string) {
 }
 
 const MetricContext = React.createContext({
-  metrics: [], fetchMetrics: () => {}
-})
+  metrics: [],
+  fetchMetrics: () => {},
+});
 
-function MetricHelper({name, values}) {
+function MetricHelper({ name, values }) {
   return (
-    <Box>
-      <Text>
-        {capitalize(name)}
-      </Text>
-      <LineChart x={values.x} y={values.y.map(yi => yi.toFixed(2))} name={name} />
-    </Box>
-  
-  )}
+    <div>
+      <Text>{capitalize(name)}</Text>
+      <LineChart
+        x={values.x}
+        y={values.y.map((yi) => yi.toFixed(2))}
+        name={name}
+        xlabel="Dataset size"
+      />
+    </div>
+  );
+}
 
-export default function MetricPlot () {
-  const [metrics, setMetrics] = useState([])
-  const fetchMetrics = async () => {
-    const response = await fetch("http://0.0.0.0:8000/metrics")
-    const metrics = await response.json()
-    setMetrics(metrics.data)
-  }
+export default function MetricPlot() {
+  const [metrics, setMetrics] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    fetchMetrics()
-  }, [])
+    fetch("http://0.0.0.0:8000/metrics")
+      .then((res) => res.json())
+      .then(
+        (metrics) => {
+          setMetrics(metrics);
+          setIsLoaded(true);
+        },
+        (error) => {
+          console.log("Can't fetch stats");
+          setIsLoaded(false);
+          setError(error);
+        }
+      );
+  }, []);
 
-
-  return (
-    <MetricContext.Provider value={{metrics, fetchMetrics}}>
-      <Stack spacing={5}>
-      {
-        Object.keys(metrics).map((met) => (
-          <MetricHelper name={met} values={metrics[met]} />
-        ))
-    }
-    </Stack>
-    </MetricContext.Provider>
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <MetricContext.Provider value={{ metrics }}>
+        <Text align="left" mb="1px" style={{ fontWeight: "bold" }}>
+          Metrics
+        </Text>
+        <SimpleGrid columns={3} spacing={10}>
+          {Object.keys(metrics).map((met) => (
+            <MetricHelper name={met} values={metrics[met]} />
+          ))}
+        </SimpleGrid>
+      </MetricContext.Provider>
     );
+  }
 }

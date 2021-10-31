@@ -11,6 +11,7 @@ uvicorn = "^0.15.0"
 fastapi = "^0.68.1"
 baal = "^1.3.2"
 torchvision = "^0.10.1"
+aiofiles = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.910"
