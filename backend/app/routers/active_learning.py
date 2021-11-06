@@ -50,6 +50,7 @@ async def get_item_image(
     pil_image.save(full_path)
     return full_path
 
+
 @router.get("/{dataset}/item/{index}/info")
 async def get_item_info(
     dataset: DatasetSplit = Query(..., title="Dataset"),

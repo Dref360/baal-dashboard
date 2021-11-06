@@ -19,7 +19,7 @@ def make_fake_data(
     )
 
     # Create fake predictions following a gaussian distribution for 20 MC-sampling
-    predictions = {i : np.random.randn(10, 20) for i in np.arange(len(al_dataset.pool))}
+    predictions = {i: np.random.randn(10, 20) for i in np.arange(len(al_dataset.pool))}
 
     # Create fake metrics following an asymptotic function
     f1, accuracy = Metric(x=[], y=[]), Metric(x=[], y=[])
@@ -35,7 +35,7 @@ def make_fake_data(
             "dataset": al_dataset.state_dict(),
             "metrics": {"f1": f1, "accuracy": accuracy},
             "uncertainty_progress": al_manager.uncertainty_progress,
-            "predictions": predictions
+            "predictions": predictions,
         }
     )
     return al_manager

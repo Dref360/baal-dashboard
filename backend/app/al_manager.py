@@ -26,7 +26,7 @@ class ActiveLearningManager:
     def __init__(self, al_dataset: ActiveLearningDataset, config: ALConfig):
         self.config = config
         self.uncertainty_progress: List[Tuple[Uncertainty, Indices]] = []
-        self.predictions : Dict[int, np.ndarray] = {}
+        self.predictions: Dict[int, np.ndarray] = {}
         self.metrics: Dict[str, Metric] = {}
         self.dataset = al_dataset
         self.class_distribution: List[int] = []
@@ -44,7 +44,7 @@ class ActiveLearningManager:
             "dataset": self.dataset.state_dict(),
             "metrics": self.metrics,
             "uncertainty_progress": self.uncertainty_progress,
-            "predictions": self.predictions
+            "predictions": self.predictions,
         }
 
     def _find_stats(self):
@@ -81,16 +81,19 @@ class ActiveLearningManager:
     def get_dataset_info(self) -> List[Tuple[str, int]]:
         return list(
             zip(
-                [self.class_index_to_name(idx) for idx in range(len(self.class_distribution))],
+                [
+                    self.class_index_to_name(idx)
+                    for idx in range(len(self.class_distribution))
+                ],
                 self.class_distribution,
             )
         )
 
-    def class_index_to_name(self, class_idx:int) -> str:
+    def class_index_to_name(self, class_idx: int) -> str:
         if self.config.class_names:
             return self.config.class_names[class_idx]
         else:
-            return  f"Class {class_idx}"
+            return f"Class {class_idx}"
 
     def get_input_image(self, index: int, dataset: DatasetSplit) -> Image:
         if dataset == DatasetSplit.labelled:
@@ -105,5 +108,7 @@ class ActiveLearningManager:
         if index not in self.predictions:
             raise ValueError(f"Unknown index {index}")
         info = self.predictions[index].mean(-1)
-        return ItemInfo(prediction=self.class_index_to_name(np.argmax(info)),
-         confidence=np.max(info))
+        return ItemInfo(
+            prediction=self.class_index_to_name(np.argmax(info).item()),
+            confidence=np.max(info),
+        )

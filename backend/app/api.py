@@ -28,7 +28,9 @@ def load_dataset():
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--checkpoint", default=None, help="Restart from a previous instance.")
+    parser.add_argument(
+        "--checkpoint", default=None, help="Restart from a previous instance."
+    )
     parser.add_argument("--config", default=None, help="Config file of BaaL Dashboard.")
     return parser.parse_args()
 
@@ -37,12 +39,11 @@ def create_app():
     global _al_manager
     args = parse_args()
     dataset = load_dataset()
-    
+
     if args.config is not None:
         config = ALConfig.parse_file(args.config)
     else:
         config = ALConfig()
-
 
     if args.checkpoint is not None:
         print("Loading", args.checkpoint)
@@ -50,7 +51,9 @@ def create_app():
         _al_manager.load_state_dict(torch.load(args.checkpoint))
     else:
         print("Making fake checkpoint!")
-        _al_manager = make_fake_data(dataset, config=config, num_labelled=1826, num_step=20)
+        _al_manager = make_fake_data(
+            dataset, config=config, num_labelled=1826, num_step=20
+        )
 
     app = FastAPI()
 
