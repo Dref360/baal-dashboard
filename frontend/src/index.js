@@ -24,23 +24,23 @@ function App() {
       <Header />
       <Spacer p={1} />
       <Grid
-        templateRows="repeat(4, 1fr)"
+        templateRows="repeat(10, 1fr)"
         templateColumns="repeat(6, 1fr)"
         gap={4}
       >
-        <GridItem rowSpan={4} colSpan={1}>
+        <GridItem rowSpan={10} colSpan={1}>
           <DatasetInfo />
         </GridItem>
-        <GridItem  colStart={2} colSpan={5} rowSpan={1}>
+        <GridItem colSpan={5} rowSpan={1}>
           <LabellingStats />
         </GridItem>
-        <GridItem colStart={2} colSpan={5}>
+        <GridItem colSpan={5} rowSpan={2}>
           <MetricPlot />
         </GridItem>
-        <GridItem colStart={2} colSpan={5}>
+        <GridItem colSpan={5} rowSpan={3}>
           <InputTable />
         </GridItem>
-        <GridItem colSpan={5}></GridItem>
+        <GridItem colSpan={5} rowSpan={2}></GridItem>
       </Grid>
     </ChakraProvider>
   );

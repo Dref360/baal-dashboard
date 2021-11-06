@@ -19,3 +19,7 @@ class LabellingStat(BaseModel):
     total: int
     uncertainty_stats: NormalDistribution
     uncertainty: List[float]
+
+class ItemInfo(BaseModel):
+    prediction: str
+    confidence: float

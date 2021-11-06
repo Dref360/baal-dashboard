@@ -4,9 +4,9 @@ from typing import Dict, List, Tuple
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import FileResponse
 
-from app.active_learning import Metric
+from app.al_manager import Metric
 from app.api import get_al_manager
-from app.types.active_learning import LabellingStat, DatasetSplit
+from app.types.active_learning import ItemInfo, LabellingStat, DatasetSplit
 
 pjoin = os.path.join
 router = APIRouter(tags=["Active Learning"])
@@ -49,3 +49,12 @@ async def get_item_image(
     full_path = pjoin(folder, f"{index}.png")
     pil_image.save(full_path)
     return full_path
+
+@router.get("/{dataset}/item/{index}/info")
+async def get_item_info(
+    dataset: DatasetSplit = Query(..., title="Dataset"),
+    index: int = Query(..., title="Dataset Index"),
+    al_manager=Depends(get_al_manager),
+) -> ItemInfo:
+    info = al_manager.get_info(index=index, dataset=dataset)
+    return info

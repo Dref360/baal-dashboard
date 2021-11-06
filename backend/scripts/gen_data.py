@@ -3,7 +3,7 @@ import torch
 from baal.active import ActiveLearningDataset
 from torchvision import transforms, datasets
 
-from app.active_learning import ActiveLearningManager, Metric
+from app.al_manager import ActiveLearningManager, Metric
 from app.utils import make_fake_data
 
 NUM_STEP = 20
