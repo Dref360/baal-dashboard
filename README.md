@@ -1,8 +1,8 @@
-# **WIP** A Dashbord for Active learning 
+# **WIP** A Dashboard for Active learning 
 
 This project aims at creating an interactive dashboard for [BaaL](https://github.com/ElementAI/baal), an active learning library. 
 
-**WARNING** I have little knowledge in React/Frontend development.
+**WARNING** I have little knowledge in React/Frontend development. I'm learning along.
 
 ### How to run
 
